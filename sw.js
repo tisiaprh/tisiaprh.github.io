@@ -13,9 +13,9 @@ self.addEventListener('install', function(event) {
       console.log('caching - getting');
       return cache.addAll([
           '/index.html',
-          'http://code.jquery.com/jquery-1.11.1.min.js',
-          'http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js',
-          'http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css',
+          '/jquery.js',
+          '/src/js/jquery.mobile-1.4.5.min.js',
+          '/src/css/jquery.mobile-1.4.5.min.css',
           '/src/css/jquery.mobile.icons-1.4.5.min.css',
           '/src/css/jquery.mobile.structure-1.4.5.min.css',
           '/listview-grid.css',
