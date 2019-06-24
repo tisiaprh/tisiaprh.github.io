@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Classic theme - jQuery Mobile Demos</title>
+
+	<link rel="manifest" href="manifest.json">
+
+	<link rel="stylesheet" href="src/css/jquery.mobile.icons-1.4.5.min.css">
+	<!-- <link rel="stylesheet" href="../demos/theme-default/theme-default.css"> -->
+	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
+	<link rel="stylesheet" href="src/css/jquery.mobile.structure-1.4.5.min.css">
+	<link rel="shortcut icon" href="favicon.ico">
+	<link rel="stylesheet" href="listview-grid.css">
+	
+	<script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+	<script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+	<script>
+		$( document ).on( "pagecreate", function() {
+			$( "#theme-selector input" ).on( "change", function( event ) {
+				var themeClass = $( "#theme-selector input:checked" ).attr( "id" );
+
+				$( "#testpage" ).removeClass( "ui-page-theme-a ui-page-theme-b ui-page-theme-c ui-page-theme-d ui-page-theme-e" ).addClass( "ui-page-theme-" + themeClass );
+				$( "#ui-body-test" ).removeClass( "ui-body-a ui-body-b ui-body-c ui-body-d ui-body-e" ).addClass( "ui-body-" + themeClass );
+				$( "#ui-bar-test, #ui-bar-form" ).removeClass( "ui-bar-a ui-bar-b ui-bar-c ui-bar-d ui-bar-e" ).addClass( "ui-bar-" + themeClass );
+				$( ".ui-collapsible-content" ).removeClass( "ui-body-a ui-body-b ui-body-c ui-body-d ui-body-e" ).addClass( "ui-body-" + themeClass );
+				$( ".theme" ).text( themeClass );
+			});
+			$( "#opt-navbars input" ).on( "change", function( event ) {
+				if ( $( "#show" ).prop( "checked" ) ) {
+					$( "#testpage .ui-navbar" ).show();
+					$( "#testpage .ui-footer h4" ).hide();
+				} else if ( $( "#hide" ).prop( "checked" ) ) {
+					$( "#testpage .ui-navbar" ).hide();
+					$( "#testpage .ui-footer h4" ).show();
+				}
+			});
+			$( "#opt-shadow input" ).on( "change", function( event ) {
+				if ( $( "#on" ).prop( "checked" ) ) {
+					$( "#testpage" ).removeClass( "noshadow" );
+				} else if ( $( "#off" ).prop( "checked" ) ) {
+					$( "#testpage" ).addClass( "noshadow" );
+				}
+			});
+			$( "#opt-iconshadow input" ).on( "change", function( event ) {
+				if ( $( "#off1" ).prop( "checked" ) ) {
+					$( "#testpage" ).removeClass( "ui-shadow-icon" );
+				} else if ( $( "#on1" ).prop( "checked" ) ) {
+					$( "#testpage" ).addClass( "ui-shadow-icon" );
+				}
+			});
+			$( "#opt-gradient input" ).on( "change", function( event ) {
+				if ( $( "#off2" ).prop( "checked" ) ) {
+					$( "#testpage" ).addClass( "nogradient" );
+				} else if ( $( "#on2" ).prop( "checked" ) ) {
+					$( "#testpage" ).removeClass( "nogradient" );
+				}
+			});
+			$( "#opt-highlight input" ).on( "change", function( event ) {
+				if ( $( "#off3" ).prop( "checked" ) ) {
+					$( "#testpage" ).addClass( "nohighlight" );
+				} else if ( $( "#on3" ).prop( "checked" ) ) {
+					$( "#testpage" ).removeClass( "nohighlight" );
+				}
+			});
+		});
+	</script>
+	<style>
+		.noshadow * {
+			-webkit-box-shadow: none !important;
+			-moz-box-shadow: none !important;
+			box-shadow: none !important;
+		}
+		.nogradient,
+		.nogradient * {
+			background-image: none !important;
+		}
+		.nohighlight .ui-btn:before {
+			display: none !important;
+		}
+		form.ui-mini .ui-field-contain fieldset.ui-controlgroup legend small {
+			color: #666;
+		}
+		.cards{
+			text-align: center;
+		}
+		.picture{
+			width:90%;
+		}
+	</style>
+</head>
+<body>
+<div data-role="page" id="testpage">
+
+	<div data-role="header">
+		<h1>Film Review</h1>
+		
+		<div data-role="navbar">
+			<ul id="myid">
+				<li value="1"><a>Now Playing</a></li>
+				<li value="2"><a>Popular</a></li>
+				<li value="3"><a>Top Rated</a></li>
+			</ul>
+		</div>
+	</div>
+
+	<div role="main" class="ui-content">
+		<fieldset class="ui-grid-c" id="api">
+		</fieldset>
+		<fieldset id="content"></fieldset>
+		<fieldset id="reviews"></fieldset>
+	</div>
+	<button>Install</button>
+
+</div>
+	
+</body>
+<script src="src/js/app.js"></script>
+
+</html>
+
+
+<script type="text/javascript">
+	$(document).ready( function () {
+		var isi_api = localStorage.getItem("api");
+		var isi_content = localStorage.getItem("content");
+		var isi_reviews = localStorage.getItem("reviews");
+		if(isi_api){
+			console.log(isi_api);
+			$('#api').html(isi_api);
+		} else if(isi_content != "" && isi_reviews != ""){
+			console.log('hehe');
+			$('#content').html(isi_content);
+			$('#reviews').html(isi_reviews);
+		} else {
+			fetch('https://api.themoviedb.org/3/movie/now_playing?api_key=f809c130e561b217e08ea5ae2d76252a&language=en-US&page=1', {
+				method: 'get'
+				}).then((resp) => resp.json())
+				.then(function(response) {
+					let api = response.results;
+				    var content = "";
+				    for(var i = 0; i<api.length; i++){
+				    	content += "<div class='ui-block-a' style=>";
+				    		content += "<img src='https://image.tmdb.org/t/p/w185_and_h278_bestv2"+api[i]['poster_path']+"' class='picture'>";
+				    		content += "<h2>" + api[i]['title'] + "</h2>";
+				    		content += "<p>" + api[i]['vote_average'] + "/10</p>";
+				    		content += "<input type='hidden' name='id' value='" + api[i]['id'] + "'>";
+				    	content += "</div>";
+				    	i++;
+				    	content += "<div class='ui-block-b'>";
+				    		content += "<img src='https://image.tmdb.org/t/p/w185_and_h278_bestv2"+api[i]['poster_path']+"' class='picture'>";
+				    		content += "<h2>" + api[i]['title'] + "</h2>";
+				    		content += "<p>" + api[i]['vote_average'] + "/10</p>";
+				    		content += "<input type='hidden' name='id' value='" + api[i]['id'] + "'>";
+				    	content += "</div>";
+				    	i++;
+				    	content += "<div class='ui-block-c'>";
+				    		content += "<img src='https://image.tmdb.org/t/p/w185_and_h278_bestv2"+api[i]['poster_path']+"' class='picture'>";
+				    		content += "<h2>" + api[i]['title'] + "</h2>";
+				    		content += "<p>" + api[i]['vote_average'] + "/10</p>";
+				    		content += "<input type='hidden' name='id' value='" + api[i]['id'] + "'>";
+				    	content += "</div>";
+				    	i++;
+				    	content += "<div class='ui-block-d'>";
+				    		content += "<img src='https://image.tmdb.org/t/p/w185_and_h278_bestv2"+api[i]['poster_path']+"' class='picture'>";
+				    		content += "<h2>" + api[i]['title'] + "</h2>";
+				    		content += "<p>" + api[i]['vote_average'] + "/10</p>";
+				    		content += "<input type='hidden' name='id' value='" + api[i]['id'] + "'>";
+				    	content += "</div>";
+				    	i++;
+				    }
+				    $('#api').html(content);
+				}).catch(function(err) {
+					// Error :(
+				});			
+		}
+		
+		var clicked;
+		$("#myid li").click(function() {
+		    clicked=this.value;
+		    $('#api').show();
+		    $('#content').hide();
+			$('#reviews').hide();
+			localStorage.removeItem("content");
+			localStorage.removeItem("reviews");
+		    if(clicked == 1){
+				fetch('https://api.themoviedb.org/3/movie/now_playing?api_key=f809c130e561b217e08ea5ae2d76252a&language=en-US&page=1', {
+				method: 'get'
+				}).then((resp) => resp.json())
+				.then(function(response) {
+					let api = response.results;
+				    var content = "";
+				    for(var i = 0; i<api.length; i++){
+				    	content += "<div class='ui-block-a'>";
+				    		content += "<img src='https://image.tmdb.org/t/p/w185_and_h278_bestv2"+api[i]['poster_path']+"' class='picture'>";
+				    		content += "<h2>" + api[i]['title'] + "</h2>";
+				    		content += "<p>" + api[i]['vote_average'] + "/10</p>";
+				    		content += "<input type='hidden' name='id' value='" + api[i]['id'] + "'>";
+				    	content += "</div>";
+				    	i++;
+				    	content += "<div class='ui-block-b'>";
+				    		content += "<img src='https://image.tmdb.org/t/p/w185_and_h278_bestv2"+api[i]['poster_path']+"' class='picture'>";
+				    		content += "<h2>" + api[i]['title'] + "</h2>";
+				    		content += "<p>" + api[i]['vote_average'] + "/10</p>";
+				    		content += "<input type='hidden' name='id' value='" + api[i]['id'] + "'>";
+				    	content += "</div>";
+				    	i++;
+				    	content += "<div class='ui-block-c'>";
+				    		content += "<img src='https://image.tmdb.org/t/p/w185_and_h278_bestv2"+api[i]['poster_path']+"' class='picture'>";
+				    		content += "<h2>" + api[i]['title'] + "</h2>";
+				    		content += "<p>" + api[i]['vote_average'] + "/10</p>";
+				    		content += "<input type='hidden' name='id' value='" + api[i]['id'] + "'>";
+				    	content += "</div>";
+				    	i++;
+				    	content += "<div class='ui-block-d'>";
+				    		content += "<img src='https://image.tmdb.org/t/p/w185_and_h278_bestv2"+api[i]['poster_path']+"' class='picture'>";
+				    		content += "<h2>" + api[i]['title'] + "</h2>";
+				    		content += "<p>" + api[i]['vote_average'] + "/10</p>";
+				    		content += "<input type='hidden' name='id' value='" + api[i]['id'] + "'>";
+				    	content += "</div>";
+				    	i++;
+				    }
+				    $('#api').html(content);
+				    localStorage.setItem("api", content);
+				}).catch(function(err) {
+					// Error :(
+				});			
+			}else if(clicked == 2){
+				fetch('https://api.themoviedb.org/3/movie/popular?api_key=f809c130e561b217e08ea5ae2d76252a&language=en-US&page=1', {
+				method: 'get'
+				}).then((resp) => resp.json())
+				.then(function(response) {
+					let api = response.results;
+				    var content = "";
+				    for(var i = 0; i<api.length; i++){
+				    	content += "<div class='ui-block-a'>";
+				    		content += "<img src='https://image.tmdb.org/t/p/w185_and_h278_bestv2"+api[i]['poster_path']+"' class='picture'>";
+				    		content += "<h2>" + api[i]['title'] + "</h2>";
+				    		content += "<p>" + api[i]['vote_average'] + "/10</p>";
+				    		content += "<input type='hidden' name='id' value='" + api[i]['id'] + "'>";
+				    	content += "</div>";
+				    	i++;
+				    	content += "<div class='ui-block-b'>";
+				    		content += "<img src='https://image.tmdb.org/t/p/w185_and_h278_bestv2"+api[i]['poster_path']+"' class='picture'>";
+				    		content += "<h2>" + api[i]['title'] + "</h2>";
+				    		content += "<p>" + api[i]['vote_average'] + "/10</p>";
+				    		content += "<input type='hidden' name='id' value='" + api[i]['id'] + "'>";
+				    	content += "</div>";
+				    	i++;
+				    	content += "<div class='ui-block-c'>";
+				    		content += "<img src='https://image.tmdb.org/t/p/w185_and_h278_bestv2"+api[i]['poster_path']+"' class='picture'>";
+				    		content += "<h2>" + api[i]['title'] + "</h2>";
+				    		content += "<p>" + api[i]['vote_average'] + "/10</p>";
+				    		content += "<input type='hidden' name='id' value='" + api[i]['id'] + "'>";
+				    	content += "</div>";
+				    	i++;
+				    	content += "<div class='ui-block-d'>";
+				    		content += "<img src='https://image.tmdb.org/t/p/w185_and_h278_bestv2"+api[i]['poster_path']+"' class='picture'>";
+				    		content += "<h2>" + api[i]['title'] + "</h2>";
+				    		content += "<p>" + api[i]['vote_average'] + "/10</p>";
+				    		content += "<input type='hidden' name='id' value='" + api[i]['id'] + "'>";
+				    	content += "</div>";
+				    	i++;
+				    }
+				    $('#api').html(content);
+				    localStorage.setItem("api", content);
+				}).catch(function(err) {
+					// Error :(
+				});			
+			}else{
+				fetch('https://api.themoviedb.org/3/movie/top_rated?api_key=f809c130e561b217e08ea5ae2d76252a&language=en-US&page=1', {
+				method: 'get'
+				}).then((resp) => resp.json())
+				.then(function(response) {
+					let api = response.results;
+				    var content = "";
+				    for(var i = 0; i<api.length; i++){
+				    	content += "<div class='ui-block-a'>";
+				    		content += "<img src='https://image.tmdb.org/t/p/w185_and_h278_bestv2"+api[i]['poster_path']+"' class='picture'>";
+				    		content += "<h2>" + api[i]['title'] + "</h2>";
+				    		content += "<p>" + api[i]['vote_average'] + "/10</p>";
+				    		content += "<input type='hidden' name='id' value='" + api[i]['id'] + "'>";
+				    	content += "</div>";
+				    	i++;
+				    	content += "<div class='ui-block-b'>";
+				    		content += "<img src='https://image.tmdb.org/t/p/w185_and_h278_bestv2"+api[i]['poster_path']+"' class='picture'>";
+				    		content += "<h2>" + api[i]['title'] + "</h2>";
+				    		content += "<p>" + api[i]['vote_average'] + "/10</p>";
+				    		content += "<input type='hidden' name='id' value='" + api[i]['id'] + "'>";
+				    	content += "</div>";
+				    	i++;
+				    	content += "<div class='ui-block-c'>";
+				    		content += "<img src='https://image.tmdb.org/t/p/w185_and_h278_bestv2"+api[i]['poster_path']+"' class='picture'>";
+				    		content += "<h2>" + api[i]['title'] + "</h2>";
+				    		content += "<p>" + api[i]['vote_average'] + "/10</p>";
+				    		content += "<input type='hidden' name='id' value='" + api[i]['id'] + "'>";
+				    	content += "</div>";
+				    	i++;
+				    	content += "<div class='ui-block-d'>";
+				    		content += "<img src='https://image.tmdb.org/t/p/w185_and_h278_bestv2"+api[i]['poster_path']+"' class='picture'>";
+				    		content += "<h2>" + api[i]['title'] + "</h2>";
+				    		content += "<p>" + api[i]['vote_average'] + "/10</p>";
+				    		content += "<input type='hidden' name='id' value='" + api[i]['id'] + "'>";
+				    	content += "</div>";
+				    	i++;
+				    }
+				    $('#api').html(content);
+				    localStorage.setItem("api", content);
+;				}).catch(function(err) {
+					// Error :(
+				});	
+			}
+		});
+		$('#api').click(function(event){
+			localStorage.removeItem("api");
+			var node = event.target.nodeName;
+			var id = 0;
+			if(node == 'DIV'){
+				id = event.target.lastChild.value;
+			} else if(node == 'IMG' || node == 'H2' || node == 'P'){
+				id = event.target.parentNode.lastChild.value;
+			} else if(node == 'INPUT'){
+				id = event.target.value;
+			}
+			$('#api').hide();
+			$('#content').show();
+			$('#reviews').show();
+			var link = "https://api.themoviedb.org/3/movie/" + id + "?api_key=f809c130e561b217e08ea5ae2d76252a";
+			fetch(link, {
+				method: 'get'
+				}).then((resp) => resp.json())
+				.then(function(response) {
+				    var content = "";
+				    var date = response.release_date.split('-');
+				    var year = date[0];
+				    content += "<table class='table'>";
+				    content += "<tr>";
+				    content += "<td colspan='2'><h1>" + response.original_title + " (" + year + ")</h1></td>";
+				    content += "</tr>";
+				    content += "<tr>";
+				    content += "<td><img src='https://image.tmdb.org/t/p/w185_and_h278_bestv2" + response.poster_path + "' style='width:20vw;'></td>";
+				    var overview = "<p>" + response.overview + "</p>";
+				    var runtime = "<p><b>Runtime : </b>" + response.runtime + "</p>";
+				    var vote = "<p><b>Vote : </b>" + response.vote_average + "/10</p>";
+				    content += "<td>" + overview + "<br>" + runtime + vote + "</td>";
+				    content += "</tr>";
+				    content += "</table>";
+				    $('#content').html(content);
+				    localStorage.setItem("content", content);
+				}).catch(function(err) {
+					// Error :(
+				});			
+			var links = "https://api.themoviedb.org/3/movie/" + id + "/reviews?api_key=f809c130e561b217e08ea5ae2d76252a&language=en-US";
+			fetch(links, {
+				method: 'get'
+				}).then((resp) => resp.json())
+				.then(function(response) {
+					let result = response.results;
+				    var review_content = "";
+				    content += "<table class='table'>";
+				    	for(var i = 0; i < result.length; i++){
+				    		review_content += "<tr>";
+				    			var author = "<p>" + result[i]['author'] + "</p>";
+				    			var isi = "<p>" + result[i]['content'] + "</p>";
+				    			review_content += "<td>" + author + isi + "</td>";
+				    		review_content += "</tr>";
+				    	}
+				    review_content += "</table>";
+				    $('#reviews').html(review_content);
+				    localStorage.setItem("reviews", review_content);				    
+				}).catch(function(err) {
+					// Error :(
+				});		
+		});
+	});
+		
+</script>
+
+--PWA DEPENDACIES--
+<!-- <link rel="js" type="../sw.js" href=""> -->
+<!-- <script src="../src/js/app.js"></script> -->
+
