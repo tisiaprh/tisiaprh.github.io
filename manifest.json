@@ -3,7 +3,7 @@
   "short_name": "RevFilm",
   "icons": [
     {
-      "src": "src/video.png",
+      "src": "src/clapperboard-512.png",
       "type": "image/png",
       "sizes": "512x512"
     },
@@ -13,9 +13,9 @@
       "sizes": "128x128"
     },
     {
-      "src": "src/clapperboard.png",
+      "src": "src/clapperboard-small.png",
       "type": "image/png",
-      "sizes": "128x128"
+      "sizes": "64x64"
     }
   ],
   "start_url": "/index.html",
