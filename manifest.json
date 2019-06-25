@@ -7,6 +7,11 @@
       "type": "image/png",
       "sizes": "512x512"
     }
+    {
+      "src": "src/video-144.png",
+      "type": "image/png",
+      "sizes": "144x144"
+    }
   ],
   "start_url": "/index.html",
   "scope": ".",
