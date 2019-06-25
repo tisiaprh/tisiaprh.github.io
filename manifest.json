@@ -8,9 +8,9 @@
       "sizes": "512x512"
     },
     {
-      "src": "src/video-144.png",
+      "src": "src/clapperboard.png",
       "type": "image/png",
-      "sizes": "144x144"
+      "sizes": "128x128"
     },
     {
       "src": "src/clapperboard.png",
