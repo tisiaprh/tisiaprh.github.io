@@ -2,6 +2,16 @@
   "name": "Review Film",
   "short_name": "RevFilm",
   "icons": [
+    {
+      "src": "images/washbear-logo-01-192x192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "images/Icon_Bird_512x512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
   ],
   "start_url": "/index.html",
   "scope": ".",
